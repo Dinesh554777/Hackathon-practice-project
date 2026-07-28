@@ -1,0 +1,17 @@
+node_modules/
+.next/
+__pycache__/
+*.pyc
+.env
+.env.local
+*.log
+dist/
+build/
+.vscode/settings.json
+.DS_Store
+*.db
+coverage/
+.nyc_output/
+*.egg-info/
+venv/
+.venv/
