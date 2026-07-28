@@ -150,17 +150,19 @@ model OrderItem {
 }
 
 model Address {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
   userId     String
-  label      String  @default("Home")
+  label      String   @default("Home")
   street     String
   city       String
   state      String
   zip        String
-  country    String  @default("US")
-  isDefault  Boolean @default(false)
+  country    String   @default("US")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Review {

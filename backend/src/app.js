@@ -23,6 +23,7 @@ const categoryRoutes = require('./routes/categories');
 const cartRoutes = require('./routes/cart');
 const wishlistRoutes = require('./routes/wishlist');
 const orderRoutes = require('./routes/orders');
+const addressRoutes = require('./routes/addresses');
 
 app.set('prisma', prisma);
 app.set('redis', redis);
@@ -33,6 +34,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/addresses', addressRoutes);
 
 app.get('/api/health', async (req, res) => {
   const dbStatus = await prisma.$queryRaw`SELECT 1`.then(() => 'ok').catch(() => 'error');
