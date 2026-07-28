@@ -20,6 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const categoryRoutes = require('./routes/categories');
+const cartRoutes = require('./routes/cart');
+const wishlistRoutes = require('./routes/wishlist');
+const orderRoutes = require('./routes/orders');
 
 app.set('prisma', prisma);
 app.set('redis', redis);
@@ -27,6 +30,9 @@ app.set('redis', redis);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.get('/api/health', async (req, res) => {
   const dbStatus = await prisma.$queryRaw`SELECT 1`.then(() => 'ok').catch(() => 'error');
