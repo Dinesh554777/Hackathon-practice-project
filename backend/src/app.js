@@ -3,7 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const { PrismaClient } = require('@prisma/client');
+const { connectMongo } = require('./db/mongoose');
+const redis = require('./db/redis');
 
+const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -13,12 +17,32 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.set('prisma', prisma);
+app.set('redis', redis);
+
+app.get('/api/health', async (req, res) => {
+  const dbStatus = await prisma.$queryRaw`SELECT 1`.then(() => 'ok').catch(() => 'error');
+  res.json({
+    status: 'ok',
+    database: dbStatus,
+    timestamp: new Date().toISOString(),
+  });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+async function start() {
+  try {
+    await prisma.$connect();
+    console.log('PostgreSQL connected');
+    await connectMongo();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server', err);
+    process.exit(1);
+  }
+}
 
-module.exports = app;
+start();
+
+module.exports = { app, prisma };
