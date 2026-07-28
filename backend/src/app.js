@@ -17,8 +17,12 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const authRoutes = require('./routes/auth');
+
 app.set('prisma', prisma);
 app.set('redis', redis);
+
+app.use('/api/auth', authRoutes);
 
 app.get('/api/health', async (req, res) => {
   const dbStatus = await prisma.$queryRaw`SELECT 1`.then(() => 'ok').catch(() => 'error');
